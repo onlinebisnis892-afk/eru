@@ -1,11 +1,10 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -36,15 +35,15 @@ export default function LoginPage() {
 
       if (!response.ok || !data.success) {
         setError(
-          data.message ||
-            "Username atau password salah."
+          data.message || "Username atau password salah."
         );
         return;
       }
 
       const redirect =
-        searchParams.get("redirect") ||
-        "/dashboard";
+        new URLSearchParams(window.location.search).get(
+          "redirect"
+        ) || "/dashboard";
 
       router.replace(redirect);
       router.refresh();
@@ -195,12 +194,10 @@ export default function LoginPage() {
               opacity: loading ? 0.7 : 1,
             }}
           >
-            {loading
-              ? "Memproses..."
-              : "Masuk"}
+            {loading ? "Memproses..." : "Masuk"}
           </button>
         </form>
       </div>
     </main>
   );
-        }
+}
