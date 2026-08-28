@@ -1,5 +1,86 @@
+"use client";
+
 import Link from "next/link";
-export default function Shell({children}:{children:React.ReactNode}){
- const nav=[["🏠","Dashboard","/dashboard"],["👤","Customer","/customers"],["📅","Booking","/booking"],["🚶","Queue","/queue"],["🧾","POS","/pos"],["📦","Inventory","/inventory"],["💰","Finance","/finance"],["📊","Reports","/reports"]];
- return <div className="shell"><aside className="sidebar"><div className="brand">WZ MANAGE PRO</div><nav className="nav">{nav.map(x=><Link href={x[2]} key={x[2]}>{x[0]}&nbsp; {x[1]}</Link>)}</nav></aside><section className="main">{children}</section></div>
+import { usePathname } from "next/navigation";
+
+const menu = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/customers", label: "Customer" },
+  { href: "/booking", label: "Booking" },
+  { href: "/queue", label: "Queue" },
+  { href: "/pos", label: "POS / Kasir" },
+  { href: "/inventory", label: "Inventory" },
+  { href: "/finance", label: "Finance" },
+  { href: "/commission", label: "Commission & Payroll" },
+  { href: "/reports", label: "Reports" },
+];
+
+export default function Shell({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const pathname = usePathname();
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        background: "#f5f7fb",
+        color: "#111827",
+      }}
+    >
+      <aside
+        style={{
+          width: "240px",
+          minHeight: "100vh",
+          background: "#111827",
+          color: "white",
+          padding: "20px",
+          position: "fixed",
+          left: 0,
+          top: 0,
+          bottom: 0,
+        }}
+      >
+        <h2 style={{ marginBottom: "25px" }}>WZ MANAGE PRO</h2>
+
+        <nav>
+          {menu.map((item) => {
+            const active = pathname === item.href;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                style={{
+                  display: "block",
+                  padding: "11px 12px",
+                  marginBottom: "6px",
+                  borderRadius: "9px",
+                  textDecoration: "none",
+                  color: "white",
+                  background: active ? "#374151" : "transparent",
+                }}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+
+      <main
+        style={{
+          marginLeft: "240px",
+          width: "calc(100% - 240px)",
+          minHeight: "100vh",
+          padding: "25px",
+        }}
+      >
+        {children}
+      </main>
+    </div>
+  );
 }
