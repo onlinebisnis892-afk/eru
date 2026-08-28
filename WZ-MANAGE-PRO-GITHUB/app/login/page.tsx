@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function Login(){return <main className="login"><div className="loginbox"><div className="muted">BARBERSHOP MANAGEMENT</div><h1>WZ MANAGE PRO</h1><p className="muted">Masuk ke sistem pengelolaan usaha.</p><label>Username<input className="input" placeholder="Username"/></label><label style={{display:"block",marginTop:14}}>Password<input className="input" type="password" placeholder="Password"/></label><Link href="/dashboard"><button className="btn">Masuk</button></Link></div></main>}

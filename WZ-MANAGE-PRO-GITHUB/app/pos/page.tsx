@@ -1,0 +1,1 @@
+import Shell from "@/components/Shell"; export default function POS(){return <Shell><div className="title">POS</div><p className="muted">Kasir dan transaksi.</p><div className="grid actions"><div className="card"><b>Pilih layanan</b><p className="muted">Belum ada layanan terhubung.</p></div><div className="card"><b>Total</b><div className="value">Rp 0</div></div></div></Shell>}

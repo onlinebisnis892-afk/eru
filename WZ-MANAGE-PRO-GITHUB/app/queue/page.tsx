@@ -1,0 +1,1 @@
+import Shell from "@/components/Shell"; export default function Queue(){return <Shell><div className="title">Queue</div><p className="muted">Antrean pelanggan.</p><div className="card" style={{marginTop:20,textAlign:"center"}}><div className="muted">Antrean saat ini</div><div className="value">Kosong</div></div></Shell>}

@@ -1,0 +1,1 @@
+import Shell from "@/components/Shell"; export default function Booking(){return <Shell><div className="title">Booking</div><p className="muted">Kelola jadwal pelanggan.</p><div className="card" style={{marginTop:20}}><h3>Booking hari ini</h3><p className="muted">Belum ada booking.</p></div></Shell>}

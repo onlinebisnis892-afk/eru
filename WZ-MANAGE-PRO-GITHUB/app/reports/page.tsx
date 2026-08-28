@@ -1,0 +1,1 @@
+import Shell from "@/components/Shell"; export default function Reports(){return <Shell><div className="title">Reports</div><p className="muted">Laporan bisnis.</p><div className="grid actions"><div className="action">📈 Penjualan</div><div className="action">💰 Finance</div><div className="action">✂️ Commission</div><div className="action">📦 Inventory</div></div></Shell>}
