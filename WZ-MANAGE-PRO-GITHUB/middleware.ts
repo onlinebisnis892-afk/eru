@@ -1,9 +1,60 @@
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
 
 const COOKIE_NAME = "wz_session";
 
-function verifySession(token: string) {
+function base64UrlToUint8Array(base64url: string) {
+  const base64 = base64url
+    .replace(/-/g, "+")
+    .replace(/_/g, "/");
+
+  const padding =
+    "=".repeat((4 - (base64.length % 4)) % 4);
+
+  const binary = atob(base64 + padding);
+
+  return Uint8Array.from(binary, (char) =>
+    char.charCodeAt(0)
+  );
+}
+
+async function createSignature(
+  payload: string,
+  secret: string
+) {
+  const encoder = new TextEncoder();
+
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret),
+    {
+      name: "HMAC",
+      hash: "SHA-256",
+    },
+    false,
+    ["sign"]
+  );
+
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    encoder.encode(payload)
+  );
+
+  const bytes = new Uint8Array(signature);
+
+  let binary = "";
+
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+
+  return btoa(binary)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
+
+async function verifySession(token: string) {
   try {
     const secret = process.env.AUTH_SECRET;
 
@@ -19,20 +70,28 @@ function verifySession(token: string) {
 
     const [payload, signature] = parts;
 
-    const expectedSignature = crypto
-      .createHmac("sha256", secret)
-      .update(payload)
-      .digest("base64url");
+    const expectedSignature = await createSignature(
+      payload,
+      secret
+    );
 
     if (signature !== expectedSignature) {
       return false;
     }
 
+    const bytes = base64UrlToUint8Array(payload);
+
+    const decoder = new TextDecoder();
+
     const data = JSON.parse(
-      Buffer.from(payload, "base64url").toString()
+      decoder.decode(bytes)
     );
 
-    if (!data.exp || Date.now() > data.exp) {
+    if (
+      !data.username ||
+      !data.exp ||
+      Date.now() > data.exp
+    ) {
       return false;
     }
 
@@ -42,7 +101,9 @@ function verifySession(token: string) {
   }
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(
+  request: NextRequest
+) {
   const { pathname } = request.nextUrl;
 
   const publicPaths = [
@@ -87,7 +148,10 @@ export function middleware(request: NextRequest) {
     COOKIE_NAME
   )?.value;
 
-  if (!session || !verifySession(session)) {
+  if (
+    !session ||
+    !(await verifySession(session))
+  ) {
     const loginUrl = new URL(
       "/login",
       request.url
