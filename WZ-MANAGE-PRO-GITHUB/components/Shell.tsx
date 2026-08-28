@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
 
 const menu = [
   { href: "/dashboard", label: "Dashboard" },
@@ -18,7 +19,7 @@ const menu = [
 export default function Shell({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const pathname = usePathname();
 
@@ -44,7 +45,9 @@ export default function Shell({
           bottom: 0,
         }}
       >
-        <h2 style={{ marginBottom: "25px" }}>WZ MANAGE PRO</h2>
+        <h2 style={{ marginBottom: "25px" }}>
+          WZ MANAGE PRO
+        </h2>
 
         <nav>
           {menu.map((item) => {
@@ -61,7 +64,9 @@ export default function Shell({
                   borderRadius: "9px",
                   textDecoration: "none",
                   color: "white",
-                  background: active ? "#374151" : "transparent",
+                  background: active
+                    ? "#374151"
+                    : "transparent",
                 }}
               >
                 {item.label}
