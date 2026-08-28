@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 
+export const runtime = "nodejs";
+
 const COOKIE_NAME = "wz_session";
 
 export async function POST(request: NextRequest) {
@@ -67,7 +69,9 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch {
+  } catch (error) {
+    console.error("LOGIN_ERROR:", error);
+
     return NextResponse.json(
       {
         success: false,
@@ -77,4 +81,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
